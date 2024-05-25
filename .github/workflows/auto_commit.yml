@@ -18,4 +18,4 @@ jobs:
        with:
          bundler-cache: true 
      - name: Set up database schema
-       run: ruby lib/update_readme.rb
+       run: bundle exec rake run
