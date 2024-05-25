@@ -10,7 +10,7 @@ jobs:
    name: "Update user Readme repo"
    runs-on: ubuntu-latest
    env:
-     API_TOKEN: ${{ secrets.API_TOKEN }}
+     API_KEY: ${{ secrets.API_KEY }}
      GITHUB_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
    steps:
      - name: Checkout code
