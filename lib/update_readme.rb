@@ -5,8 +5,10 @@ require "pry"
 
 missing = false
 %w[API_KEY GITHUB_ACCESS_TOKEN].each do |key|
-  puts "Missing ENV #{key}" unless ENV[key]
-  missing = true
+  unless ENV[key]
+   missing = true
+   puts "Missing ENV #{key}"
+  end
 end
 
 exit if missing
@@ -48,6 +50,7 @@ begin
     file.sha,
     updated_content
   )
+  puts "Update success"
 rescue Octokit::NotFound
   puts "File not found!"
   exit
