@@ -3,7 +3,7 @@ name: Auto Commit
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "0 0 * * *"
 
 jobs:
   update_readme:
@@ -20,5 +20,5 @@ jobs:
        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
        with:
          bundler-cache: true 
-     - name: Set up database schema
+     - name: Update Readme content
        run: bundle exec rake run
