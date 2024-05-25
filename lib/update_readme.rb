@@ -1,23 +1,50 @@
 require_relative "../lib/environment"
 require_relative "../lib/quote_client"
 require "octokit"
+require "pry"
 
-client = Octokit::Client.new(access_token: ENV["GITHUB_ACCESS_TOKEN"])
+missing = false
+%w[API_KEY GITHUB_ACCESS_TOKEN].each do |key|
+  puts "Missing ENV #{key}" unless ENV[key]
+  missing = true
+end
+
+exit if missing
+
+access_token = ENV["GITHUB_ACCESS_TOKEN"]
+client = Octokit::Client.new(access_token: access_token)
+start_marker = '<!--START_SECTION:auto_commit-->'
+end_marker = '<!--END_SECTION:auto_commit-->'
+
+quote = QuoteClient.new.content_quote
+
+github_username = ENV["GITHUB_USERNAME"] || client.user.login
+github_repo = ENV["GITHUB_REPO"] || github_username
+file_path = ENV["FILE_PATH"] || "README.md"
+content_pattent = /<!--START_SECTION:auto_commit-->.*<!--END_SECTION:auto_commit-->/m
+commit_msg = ENV["COMMIT_MSG"] || "Update new quote"
 
 begin
-  file = client.contents("lpwanw/lpwanw", path: "README.md")
+  file = client.contents(
+    "#{github_username}/#{github_repo}", 
+    path: file_path
+  )
+
   readme_content = Base64.decode64(file.content).force_encoding('UTF-8')
-  unless readme_content =~ /<!--START_SECTION:auto_commit-->.*<!--END_SECTION:auto_commit-->/m
-    readme_content += "<!--START_SECTION:auto_commit--> <!--END_SECTION:auto_commit-->" 
+
+  unless readme_content =~ content_pattent
+    readme_content += "#{start_marker}/n#{end_marker}" 
   end
 
-  quote = QuoteClient.new.content_quote
+  updated_content = readme_content.sub(
+    content_pattent, 
+    "#{start_marker}\n#{quote}\n#{end_marker}"
+  )
 
-  updated_content = readme_content.sub(/<!--START_SECTION:auto_commit-->.*<!--END_SECTION:auto_commit-->/m, "<!--START_SECTION:auto_commit-->\n#{quote}\n<!--END_SECTION:auto_commit-->")
   client.update_contents(
-    "lpwanw/lpwanw",
-    "README.md",
-    "Update content between auto_commit markers",
+    "#{github_username}/#{github_repo}",
+    file_path,
+    commit_msg,
     file.sha,
     updated_content
   )
@@ -25,4 +52,3 @@ rescue Octokit::NotFound
   puts "File not found!"
   exit
 end
-
