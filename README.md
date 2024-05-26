@@ -17,7 +17,7 @@ Create a GitHub's access_token with repo access
 
 1. quote API for https://rapidapi.com/martin.svoboda/api/quotes15/
 
-## Installation
+## Setup
 
 Step-by-step instructions to install the project.
 
