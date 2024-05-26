@@ -9,13 +9,17 @@ Make at least 1 commit per day to keep your GitHub activity board green.
 
 ## Prerequisites
 
-### GITHUB ACCESS TOKEN
+#### GITHUB ACCESS TOKEN
 
 Create a GitHub's access_token with repo access
 
-### API KEY
+#### API KEY
 
 1. quote API for https://rapidapi.com/martin.svoboda/api/quotes15/
+
+#### Github's Profile
+
+Check out this site [Setting up your profile](https://docs.github.com/en/get-started/start-your-journey/setting-up-your-profile)
 
 ## Setup
 
